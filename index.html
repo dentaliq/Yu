@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نخبة الأزياء | متجر الملابس الفاخرة</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+            --light-color: #ecf0f1;
+            --dark-color: #1e2029;
+            --overlay-color: rgba(0, 0, 0, 0.95);
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            --fast-transition: all 0.3s ease;
+            --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.25);
+            --glass-effect: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 2rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+
+        .loading-container {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards 1s;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            transition: width 2.5s ease;
+            border-radius: 4px;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Main App */
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation (fixed to top for logo) */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 900;
+            backdrop-filter: blur(10px);
+            background: rgba(42, 45, 59, 0.9);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            padding: 0 30px;
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--light-color);
+            margin-right: auto;
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Hero Section (Main Landing Area) */
+        .hero-section {
+            position: relative;
+            padding: 120px 30px 80px;
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            text-align: center;
+            margin-bottom: 50px;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+            min-height: 80vh; /* Ensure it takes up most of the viewport */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            opacity: 0; /* Hidden initially for animation */
+            animation: fadeIn 1.2s ease forwards 0.5s;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: bounceIn 1s ease-out 0.8s forwards;
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeIn 1s ease-in 1.3s forwards;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Main Content (for product categories) */
+        .main-content {
+            flex: 1;
+            padding-top: 50px; /* Adjusted to fit below hero section */
+        }
+
+        /* Category Sections */
+        .category-section {
+            display: none;
+            padding: 50px 30px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .category-section.active {
+            display: block;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            aspect-ratio: 3/4;
+            display: flex;
+            flex-direction: column;
+            position: relative; /* For the new order button */
+            padding-bottom: 50px; /* Space for the button */
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-img-wrapper {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.05);
+        }
+
+        .product-price {
+            background-color: var(--primary-color);
+            color: var(--light-color);
+            padding: 10px 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-align: center;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-top: 1px solid rgba(255,255,255,0.1); /* Separator */
+        }
+
+        .gallery-item-order-btn {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(45deg, var(--secondary-color), #f39c12);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
+        }
+
+        .gallery-item-order-btn:hover {
+            background: linear-gradient(45deg, #f39c12, var(--accent-color));
+            transform: translateY(-2px);
+        }
+
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay-color);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        .lightbox.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 95vw;
+            max-height: 95vh;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column; /* Changed to column to stack elements */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: calc(95vh - 50px); /* Adjusted height as lightbox order button moved */
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 20px; /* Space for the button */
+        }
+
+        .lightbox.active .lightbox-img {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 45px;
+            height: 45px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--fast-transition);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .lightbox-close:hover {
+            background: var(--accent-color);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+
+        .lightbox-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--fast-transition);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .lightbox-btn:hover {
+            background: var(--accent-color);
+            transform: scale(1.15);
+        }
+
+        .lightbox-order-btn {
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--fast-transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 15px; /* Space from image */
+        }
+
+        .lightbox-order-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Floating Action Button (FAB) - Browse Categories */
+        .fab-container-browse {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 950;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+        }
+
+        .fab-button-browse {
+            padding: 15px 25px;
+            border-radius: 50px;
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            color: white;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+                        box-shadow 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .fab-button-browse:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .fab-menu-browse {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: absolute;
+            bottom: 80px;
+            align-items: flex-start;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            padding: 10px;
+            background: rgba(42, 45, 59, 0.85);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transform-origin: bottom left;
+        }
+
+        .fab-menu-browse.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .fab-menu-item-browse {
+            background: var(--glass-effect);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--light-color);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease-out;
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        .fab-menu-browse.active .fab-menu-item-browse {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Staggered animation for browse menu items */
+        .fab-menu-browse.active .fab-menu-item-browse:nth-child(1) { transition-delay: 0.05s; }
+        .fab-menu-browse.active .fab-menu-item-browse:nth-child(2) { transition-delay: 0.10s; }
+        .fab-menu-browse.active .fab-menu-item-browse:nth-child(3) { transition-delay: 0.15s; }
+        .fab-menu-browse.active .fab-menu-item-browse:nth-child(4) { transition-delay: 0.20s; }
+        .fab-menu-browse.active .fab-menu-item-browse:nth-child(5) { transition-delay: 0.25s; }
+        .fab-menu-browse.active .fab-menu-item-browse:nth-child(6) { transition-delay: 0.30s; }
+        .fab-menu-browse.active .fab-menu-item-browse:nth-child(7) { transition-delay: 0.35s; }
+        .fab-menu-browse.active .fab-menu-item-browse:nth-child(8) { transition-delay: 0.40s; }
+        .fab-menu-browse.active .fab-menu-item-browse:nth-child(9) { transition-delay: 0.45s; }
+
+        .fab-menu-item-browse:hover {
+            background: rgba(232, 62, 140, 0.2);
+            border-color: rgba(232, 62, 140, 0.3);
+            transform: translateX(5px);
+        }
+        /* Booking Modal/Overlay */
+        .booking-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050; /* Higher than other FABs */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .booking-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .booking-modal-content {
+            background: var(--light-color);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: translateY(50px) scale(0.9);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.4s ease;
+            position: relative;
+        }
+
+        .booking-modal-overlay.active .booking-modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .booking-modal-content h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .booking-modal-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+
+        .booking-modal-content p {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            margin-bottom: 30px;
+        }
+
+        .booking-modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .booking-modal-form input[type="text"],
+        .booking-modal-form input[type="tel"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .booking-modal-form button {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--fast-transition);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .booking-modal-form button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .booking-modal-close {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--fast-transition);
+        }
+
+        .booking-modal-close:hover {
+            background: var(--accent-color);
+            transform: rotate(90deg);
+        }
+
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            text-align: center;
+            padding: 60px 30px 40px;
+            margin-top: 50px;
+            clip-path: polygon(0 20%, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            display: inline-block;
+            color: var(--light-color);
+            font-size: 1.5rem;
+            margin: 0 15px;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .section-title {
+                font-size: 2.2rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 2.8rem; /* Keep it prominent */
+            }
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.8rem;
+            }
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
+            .lightbox-close {
+                top: -30px;
+                right: -10px;
+            }
+            .lightbox-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1.1rem;
+            }
+
+            .fab-button-browse {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            .fab-container-browse {
+                bottom: 20px;
+                left: 20px;
+            }
+
+            .fab-menu-browse {
+                bottom: 60px;
+                gap: 10px;
+                padding: 8px;
+            }
+            .fab-menu-item-browse {
+                font-size: 0.85rem;
+                padding: 8px 15px;
+            }
+
+            .booking-modal-content {
+                padding: 30px;
+            }
+            .booking-modal-content h2 {
+                font-size: 1.8rem;
+            }
+            .booking-modal-content p {
+                font-size: 0.95rem;
+            }
+            .booking-modal-form input {
+                padding: 10px;
+            }
+            .booking-modal-form button {
+                padding: 10px 20px;
+            }
+            .booking-modal-close {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+                top: 10px;
+                left: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo {
+                font-size: 2.2rem;
+            }
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+            .hero-content p {
+                font-size: 0.95rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 15px;
+            }
+            footer {
+                padding: 40px 20px 30px;
+            }
+            .footer-logo {
+                font-size: 1.8rem;
+            }
+            .nav-container {
+                padding: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-screen" id="splashScreen">
+        <div class="logo">نخبة الأزياء</div>
+        <div class="loading-container">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+    </div>
+
+    <div class="app-container" id="appContainer" style="display: none;">
+        <nav class="nav-container">
+            <div class="nav-logo">ELITE</div>
+        </nav>
+
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>مرحباً بكم في نخبة الأزياء</h1>
+                <p>وجهتكم الأولى لأحدث صيحات الموضة والأزياء الراقية، حيث تلتقي الأناقة بالجودة والتفرد في كل قطعة.</p>
+                <p>نقدم لكم تجربة تسوق فريدة ومميزة، اكتشفوا مجموعاتنا المتجددة التي تناسب جميع الأذواق والمناسبات.</p>
+            </div>
+        </section>
+
+        <main class="main-content">
+            <section id="jackets-section" class="category-section active">
+                <h2 class="section-title">الستر الرجالية</h2>
+                <div class="gallery-grid" id="jacketsGallery"></div>
+            </section>
+
+            <section id="shirts-section" class="category-section">
+                <h2 class="section-title">القمصان الرجالية</h2>
+                <div class="gallery-grid" id="shirtsGallery"></div>
+            </section>
+
+            <section id="ties-section" class="category-section">
+                <h2 class="section-title">الرباط الرجالي</h2>
+                <div class="gallery-grid" id="tiesGallery"></div>
+            </section>
+
+            <section id="pants-section" class="category-section">
+                <h2 class="section-title">البنطلونات الرجالية</h2>
+                <div class="gallery-grid" id="pantsGallery"></div>
+            </section>
+
+            <section id="women-section" class="category-section">
+                <h2 class="section-title">ملابس نسائية</h2>
+                <div class="gallery-grid" id="womenGallery"></div>
+            </section>
+
+            <section id="bags-section" class="category-section">
+                <h2 class="section-title">حقائب نسائية</h2>
+                <div class="gallery-grid" id="bagsGallery"></div>
+            </section>
+
+            <section id="girls-kids-section" class="category-section">
+                <h2 class="section-title">أطفال بناتي</h2>
+                <div class="gallery-grid" id="girlsKidsGallery"></div>
+            </section>
+
+            <section id="boys-kids-section" class="category-section">
+                <h2 class="section-title">أطفال ولادي</h2>
+                <div class="gallery-grid" id="boysKidsGallery"></div>
+            </section>
+
+            <section id="women-shoes-section" class="category-section">
+                <h2 class="section-title">أحذية نسائية</h2>
+                <div class="gallery-grid" id="womenShoesGallery"></div>
+            </section>
+        </main>
+
+        <div class="fab-container-browse" id="fab-container-browse">
+            <button class="fab-button-browse" id="fabButtonBrowse">
+                تصفح الأقسام
+            </button>
+            <div class="fab-menu-browse" id="fabMenuBrowse">
+                <button class="fab-menu-item-browse" data-section="jackets-section">الستر الرجالية</button>
+                <button class="fab-menu-item-browse" data-section="shirts-section">القمصان الرجالية</button>
+                <button class="fab-menu-item-browse" data-section="ties-section">الرباط الرجالي</button>
+                <button class="fab-menu-item-browse" data-section="pants-section">البنطلونات الرجالية</button>
+                <button class="fab-menu-item-browse" data-section="women-section">ملابس نسائية</button>
+                <button class="fab-menu-item-browse" data-section="bags-section">حقائب نسائية</button>
+                <button class="fab-menu-item-browse" data-section="girls-kids-section">أطفال بناتي</button>
+                <button class="fab-menu-item-browse" data-section="boys-kids-section">أطفال ولادي</button>
+                <button class="fab-menu-item-browse" data-section="women-shoes-section">أحذية نسائية</button>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">نخبة الأزياء</div>
+                <div class="social-links">
+                    <a href="#" aria-label="فيسبوك"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="تويتر"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="إنستغرام"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="واتساب"><i class="fab fa-whatsapp"></i></a>
+                </div>
+                <p class="copyright">© 2023 نخبة الأزياء. جميع الحقوق محفوظة.</p>
+            </div>
+        </footer>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <img class="lightbox-img" id="lightboxImg" src="" alt="">
+            <button class="lightbox-close" id="lightboxClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="lightbox-nav">
+                <button class="lightbox-btn" id="prevBtn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button class="lightbox-btn" id="nextBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            <button class="lightbox-order-btn" id="lightboxOrderBtn">اطلب الآن</button>
+        </div>
+    </div>
+
+    <div class="booking-modal-overlay" id="bookingModalOverlay">
+        <div class="booking-modal-content">
+            <button class="booking-modal-close" id="bookingModalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>اطلب الآن</h2>
+            <p>املأ النموذج أدناه وسنتواصل معك لترتيب طلبك أو الإجابة على استفساراتك.</p>
+            <div class="booking-modal-form">
+                <input type="text" id="bookingName" placeholder="اسمك الكريم" required>
+                <input type="tel" id="bookingPhone" placeholder="رقم هاتفك (مثال: 07xxxxxxxxx)" required>
+                <input type="text" id="bookingLandmark" placeholder="أقرب نقطة دالة (اختياري)">
+                <button id="submitOrderBtn">إرسال الطلب عبر التليجرام</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // بيانات المنتجات مع مسارات الصور الصحيحة
+            const products = {
+                jackets: ['Q.jpg', 'Q1.jpg', 'Q2.jpg', 'Q3.jpg', 'Q4.jpg', 'Q5.jpg', 'Q6.jpg', 'Q7.jpg', 'Q8.jpg', 'Q9.jpg', 'Q10.jpg', 'Q11.jpg', 'Q12.jpg', 'Q13.jpg', 'Q14.jpg', 'Q15.jpg', 'Q16.jpg', 'Q17.jpg', 'Q18.jpg'],
+                shirts: ['A.jpg', 'A1.jpg', 'A2.jpg', 'A3.jpg', 'A4.jpg', 'A5.jpg', 'A6.jpg', 'A7.jpg'],
+                ties: ['S.jpg', 'S1.jpg', 'S2.jpg', 'S3.jpg', 'S4.jpg', 'S5.jpg', 'S6.jpg'],
+                pants: ['W.jpg', 'W1.jpg', 'W2.jpg', 'W3.jpg', 'W4.jpg', 'W5.jpg'],
+                women: ['C.jpg', 'C1.jpg', 'C2.jpg', 'C3.jpg', 'C4.jpg', 'C5.jpg', 'C6.jpg', 'C7.jpg', 'C8.jpg', 'C9.jpg', 'C10.jpg', 'C11.jpg', 'C12.jpg', 'C13.jpg', 'C14.jpg', 'C15.jpg', 'C16.jpg', 'C17.jpg', 'C18.jpg', 'C19.jpg', 'C20.jpg', 'C21.jpg', 'C22.jpg', 'C23.jpg', 'C24.jpg', 'C25.jpg', 'C26.jpg', 'C27.jpg', 'C28.jpg', 'C29.jpg', 'C30.jpg', 'C31.jpg', 'C32.jpg', 'C33.jpg', 'C34.jpg', 'C35.jpg', 'C36.jpg', 'C37.jpg', 'C38.jpg', 'C39.jpg', 'C40.jpg', 'C41.jpg', 'C42.jpg', 'C43.jpg', 'C44.jpg', 'C45.jpg', 'C46.jpg', 'C47.jpg', 'C48.jpg', 'C49.jpg', 'C50.jpg', 'C51.jpg', 'C52.jpg', 'C53.jpg', 'C54.jpg'],
+                girlsKids: ['O.jpg', 'O1.jpg', 'O2.jpg', 'O3.jpg', 'O4.jpg', 'O5.jpg', 'O6.jpg', 'O7.jpg', 'O8.jpg', 'O9.jpg', 'O10.jpg', 'O11.jpg', 'O12.jpg', 'O13.jpg', 'O14.jpg', 'O15.jpg', 'O16.jpg', 'O17.jpg', 'O18.jpg', 'O19.jpg', 'O20.jpg', 'O21.jpg', 'O22.jpg', 'O23.jpg', 'O24.jpg', 'O25.jpg'],
+                boysKids: ['T.jpg', 'T1.jpg', 'T2.jpg', 'T3.jpg', 'T4.jpg', 'T5.jpg', 'T6.jpg', 'T7.jpg', 'T8.jpg', 'T9.jpg', 'T10.jpg', 'T11.jpg', 'T12.jpg', 'T13.jpg', 'T14.jpg', 'T15.jpg', 'T16.jpg', 'T17.jpg', 'T18.jpg', 'T19.jpg', 'T20.jpg', 'T21.jpg', 'T22.jpg', 'T23.jpg', 'T24.jpg', 'T25.jpg', 'T26.jpg', 'T27.jpg', 'T28.jpg', 'T29.jpg', 'T30.jpg', 'T31.jpg', 'T32.jpg', 'T33.jpg'],
+                bags: ['V.jpg', 'V1.jpg', 'V2.jpg', 'V3.jpg', 'V4.jpg', 'V5.jpg', 'V6.jpg', 'V7.jpg', 'V8.jpg', 'V9.jpg', 'V10.jpg', 'V11.jpg', 'V12.jpg', 'V13.jpg', 'V14.jpg', 'V15.jpg', 'V16.jpg', 'V17.jpg', 'V18.jpg', 'V19.jpg', 'V20.jpg', 'V21.jpg', 'V22.jpg', 'V23.jpg', 'V24.jpg', 'V25.jpg', 'V26.jpg', 'V27.jpg', 'V28.jpg', 'V29.jpg', 'V30.jpg', 'V31.jpg', 'V32.jpg', 'V33.jpg', 'V34.jpg', 'V35.jpg'],
+                womenShoes: ['I.jpg', 'I1.jpg', 'I2.jpg', 'I3.jpg', 'I4.jpg', 'I5.jpg', 'I6.jpg', 'I7.jpg', 'I8.jpg', 'I9.jpg', 'I10.jpg', 'I11.jpg', 'I12.jpg', 'I13.jpg', 'I14.jpg', 'I15.jpg', 'I16.jpg', 'I17.jpg', 'I18.jpg', 'I19.jpg', 'I20.jpg']
+            };
+
+            // عناوين التصنيفات
+            const categoryTitles = {
+                jackets: "الستر الرجالية",
+                shirts: "القمصان الرجالية",
+                ties: "الرباط الرجالي",
+                pants: "البنطلونات الرجالية",
+                women: "ملابس نسائية",
+                bags: "حقائب نسائية",
+                girlsKids: "أطفال بناتي",
+                boysKids: "أطفال ولادي",
+                womenShoes: "أحذية نسائية"
+            };
+
+            // Prices (random for demonstration)
+            const prices = {
+                jackets: () => `${Math.floor(Math.random() * (150 - 50 + 1) + 50)} IQD`,
+                shirts: () => `${Math.floor(Math.random() * (80 - 30 + 1) + 30)} IQD`,
+                ties: () => `${Math.floor(Math.random() * (40 - 15 + 1) + 15)} IQD`,
+                pants: () => `${Math.floor(Math.random() * (100 - 40 + 1) + 40)} IQD`,
+                women: () => `${Math.floor(Math.random() * (200 - 70 + 1) + 70)} IQD`,
+                bags: () => `${Math.floor(Math.random() * (120 - 30 + 1) + 30)} IQD`,
+                girlsKids: () => `${Math.floor(Math.random() * (60 - 20 + 1) + 20)} IQD`,
+                boysKids: () => `${Math.floor(Math.random() * (60 - 20 + 1) + 20)} IQD`,
+                womenShoes: () => `${Math.floor(Math.random() * (90 - 35 + 1) + 35)} IQD`
+            };
+
+            // العناصر
+            const splashScreen = document.getElementById('splashScreen');
+            const appContainer = document.getElementById('appContainer');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxClose = document.getElementById('lightboxClose');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const lightboxOrderBtn = document.getElementById('lightboxOrderBtn'); // This button is still in lightbox
+
+            const fabButtonBrowse = document.getElementById('fabButtonBrowse');
+            const fabMenuBrowse = document.getElementById('fabMenuBrowse');
+            const fabMenuItemsBrowse = document.querySelectorAll('.fab-menu-item-browse');
+
+            // fabButtonOrder is removed from HTML, no need to get reference here
+
+            const bookingModalOverlay = document.getElementById('bookingModalOverlay');
+            const bookingModalClose = document.getElementById('bookingModalClose');
+            const submitOrderBtn = document.getElementById('submitOrderBtn');
+            const bookingNameInput = document.getElementById('bookingName');
+            const bookingPhoneInput = document.getElementById('bookingPhone');
+            const bookingLandmarkInput = document.getElementById('bookingLandmark');
+
+            // صوت تبديل الصور (تأكد من وجود هذا الملف في مجلد المشروع)
+            const slideSound = new Audio('slide_sound.mp3');
+
+            // متغيرات Lightbox
+            let currentImages = [];
+            let currentIndex = 0;
+            let currentCategory = '';
+            let currentImageFileNameForOrder = ''; // To store the image filename being ordered
+
+            // تهيئة الصفحة (بعد Splash Screen)
+            function init() {
+                // محاكاة تحميل الصفحة
+                setTimeout(() => {
+                    document.getElementById('loadingBar').style.width = '100%';
+                }, 100);
+
+                setTimeout(() => {
+                    splashScreen.classList.add('hidden');
+                    appContainer.style.display = 'block'; // Show main app directly
+                    document.querySelector('.hero-section').scrollIntoView({ behavior: 'smooth' });
+                }, 2500);
+            }
+
+            // تحميل معرض معين
+            function loadGallery(category) {
+                currentCategory = category;
+                const gallery = document.getElementById(`${category}Gallery`);
+                if (!gallery) return;
+                
+                gallery.innerHTML = '';
+
+                const defaultErrorImage = 'https://via.placeholder.com/300x400?text=Image+Not+Found';
+                
+                if (products[category]) {
+                    products[category].forEach((image, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'gallery-item';
+                        
+                        const imgWrapper = document.createElement('div');
+                        imgWrapper.className = 'gallery-img-wrapper';
+
+                        const img = document.createElement('img');
+                        img.className = 'gallery-img';
+                        img.src = `images/${image}`;
+                        img.alt = `${categoryTitles[category]} ${index + 1}`;
+                        img.loading = 'lazy';
+                        
+                        // عند الضغط على الصورة: افتح الـ Lightbox
+                        img.onclick = () => openLightbox(category, index); 
+                        img.onerror = () => {
+                            console.error(`Error loading image: images/${image} for category ${category}`);
+                            img.src = defaultErrorImage;
+                        };
+                        
+                        imgWrapper.appendChild(img);
+                        item.appendChild(imgWrapper);
+
+                        const priceTag = document.createElement('span');
+                        priceTag.className = 'product-price';
+                        priceTag.textContent = prices[category](); // Get random price for category
+                        item.appendChild(priceTag);
+
+                        // زر "اطلب الآن" تحت كل صورة في المعرض
+                        const orderBtn = document.createElement('button');
+                        orderBtn.className = 'gallery-item-order-btn';
+                        orderBtn.textContent = 'اطلب الآن';
+                        orderBtn.onclick = (e) => {
+                            e.stopPropagation(); // منع فتح ال lightbox عند الضغط على الزر
+                            openBookingModal(image); // إرسال اسم ملف الصورة إلى ال modal
+                        };
+                        item.appendChild(orderBtn);
+
+                        gallery.appendChild(item);
+                    });
+                }
+            }
+
+            // فتح Lightbox
+            function openLightbox(category, index) {
+                currentCategory = category;
+                currentImages = products[category];
+                currentIndex = index;
+                updateLightboxImage();
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // تحديث صورة Lightbox وتشغيل الصوت
+            function updateLightboxImage() {
+                const prevIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+                const nextIndex = (currentIndex + 1) % currentImages.length;
+
+                const currentImgFileName = currentImages[currentIndex];
+                const currentImgSrc = `images/${currentImgFileName}`;
+                currentImageFileNameForOrder = currentImgFileName; // Store filename for order form
+                
+                const prevImgSrc = `images/${currentImages[prevIndex]}`;
+                const nextImgSrc = `images/${currentImages[nextIndex]}`;
+
+                lightboxImg.src = currentImgSrc;
+                lightboxImg.alt = `${categoryTitles[currentCategory]} ${currentIndex + 1}`;
+
+                new Image().src = prevImgSrc;
+                new Image().src = nextImgSrc;
+
+                slideSound.play().catch(e => console.error("Error playing sound:", e));
+            }
+
+            // إغلاق Lightbox
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            // الصورة التالية
+            function nextImage() {
+                currentIndex = (currentIndex + 1) % currentImages.length;
+                updateLightboxImage();
+            }
+
+            // الصورة السابقة
+            function prevImage() {
+                currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+                updateLightboxImage();
+            }
+
+            // فتح Booking Modal
+            function openBookingModal(imageFileName) {
+                currentImageFileNameForOrder = imageFileName; // تعيين اسم ملف الصورة ليتم إرساله
+                bookingModalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                fabMenuBrowse.classList.remove('active'); // إغلاق قائمة تصفح الأقسام
+                closeLightbox(); // إغلاق ال lightbox إذا كان مفتوحًا
+            }
+
+            // تغيير القسم (لأقسام المنتجات)
+            function changeSection(sectionId) {
+                document.querySelectorAll('.category-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                document.getElementById(sectionId).classList.add('active');
+                
+                const category = sectionId.replace('-section', '');
+                // فقط قم بتحميل المعرض إذا كان فارغًا لتجنب إعادة عرض المحتوى الموجود
+                if (document.getElementById(`${category}Gallery`).children.length === 0 || !document.getElementById(`${category}Gallery`).dataset.loaded) {
+                    loadGallery(category);
+                    document.getElementById(`${category}Gallery`).dataset.loaded = 'true';
+                }
+                
+                document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+
+                fabMenuBrowse.classList.remove('active'); // إغلاق قائمة تصفح الأقسام
+            }
+
+            // الأحداث
+            lightboxClose.addEventListener('click', closeLightbox);
+            nextBtn.addEventListener('click', nextImage);
+            prevBtn.addEventListener('click', prevImage);
+            
+            // زر "اطلب الآن" داخل الـ lightbox يفتح modal الطلب
+            lightboxOrderBtn.addEventListener('click', () => {
+                openBookingModal(currentImageFileNameForOrder); // Pass the current lightbox image filename
+                closeLightbox(); // Close lightbox when opening booking modal
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (lightbox.classList.contains('active')) {
+                    if (e.key === 'Escape') closeLightbox();
+                    if (e.key === 'ArrowRight') nextImage();
+                    if (e.key === 'ArrowLeft') prevImage();
+                }
+            });
+
+            // FAB Browse Button toggle
+            fabButtonBrowse.addEventListener('click', () => {
+                fabMenuBrowse.classList.toggle('active');
+                bookingModalOverlay.classList.remove('active'); // Ensure booking modal is closed
+            });
+
+            // FAB Browse menu items click
+            fabMenuItemsBrowse.forEach(item => {
+                item.addEventListener('click', () => {
+                    changeSection(item.dataset.section);
+                });
+            });
+
+            // Close FAB Browse menu if clicking outside of it (adjusted to check parent)
+            document.addEventListener('click', (e) => {
+                const fabBrowseContainer = document.getElementById('fab-container-browse');
+                if (fabBrowseContainer && !fabBrowseContainer.contains(e.target) && fabMenuBrowse.classList.contains('active')) {
+                    fabMenuBrowse.classList.remove('active');
+                }
+            });
+
+            // Close Booking Modal
+            bookingModalClose.addEventListener('click', () => {
+                bookingModalOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
+            });
+
+            // Close Booking Modal on overlay click
+            bookingModalOverlay.addEventListener('click', (e) => {
+                if (e.target === bookingModalOverlay) {
+                    bookingModalOverlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+
+            // Booking Form Submission
+            submitOrderBtn.addEventListener('click', () => {
+                const name = bookingNameInput.value.trim();
+                const phone = bookingPhoneInput.value.trim();
+                const landmark = bookingLandmarkInput.value.trim();
+                const orderedImageFileName = currentImageFileNameForOrder; // اسم ملف الصورة المطلوب
+
+                if (name === "" || phone === "") {
+                    alert("الرجاء إدخال اسمك ورقم هاتفك.");
+                    return;
+                }
+
+                const botToken = "7811838042:AAFa9veUjFSnsBcgASDhEPwO8bGRV17cEHw";
+                const chatId = "8008792454";
+                
+                // هنا نرسل اسم الملف بدلاً من الصورة نفسها كرسالة نصية.
+                // لتنسيق الرسالة بشكل مميز في تليجرام
+                let messageText = `**طلب جديد مميز**:\n\n`;
+                messageText += `**الاسم:** ${name}\n`;
+                messageText += `**رقم الهاتف:** ${phone}\n`;
+                if (landmark) {
+                    messageText += `**أقرب نقطة دالة:** ${landmark}\n`;
+                }
+                
+                // إضافة معلومات الصورة المطلوبة
+                if (orderedImageFileName) {
+                    messageText += `\n**الصورة المطلوبة:** \`${orderedImageFileName}\``;
+                } else {
+                    messageText += `\nاستفسار عام (لم يتم تحديد صورة محددة).`;
+                }
+
+
+                const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(messageText)}&parse_mode=Markdown`;
+
+                fetch(telegramApiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        alert("تم إرسال طلبك بنجاح! سنتواصل معك قريباً.");
+                        bookingNameInput.value = "";
+                        bookingPhoneInput.value = "";
+                        bookingLandmarkInput.value = "";
+                        bookingModalOverlay.classList.remove('active'); // إغلاق ال modal عند النجاح
+                        document.body.style.overflow = 'auto';
+                    } else {
+                        alert("حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.");
+                        console.error("Telegram API error:", data);
+                        console.error("Telegram API response:", data); // لسجل الاستجابة الكاملة لتصحيح الأخطاء
+                    }
+                })
+                .catch(error => {
+                    alert("حدث خطأ في الاتصال. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.");
+                    console.error("Network error:", error);
+                });
+            });
+
+            // بدء التحميل
+            init();
+
+            // Load initial gallery (e.g., Jackets) once the app container is visible
+            loadGallery('jackets');
+        });
+    </script>
+</body>
+</html>
